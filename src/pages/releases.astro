@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ReleaseLoader from '../components/ReleaseLoader.astro';
+import { projects } from '../data/projects.js';
+---
+<BaseLayout title="Releases — AVERY" description="Latest public releases for Avery's software projects.">
+  <section class="page-hero section-wrap">
+    <p class="eyebrow"><span class="prompt">›_</span> INDEX / RELEASES</p>
+    <h1>Ship it<span class="red">.</span></h1>
+    <p>Release notes and downloads from the projects' official GitHub repositories.</p>
+    <div class="page-meta"><span>LIVE GITHUB DATA</span><span>PUBLIC REPOSITORIES</span></div>
+  </section>
+  <section class="section-wrap section-block">
+    <div class="release-list release-list-large">
+      {projects.map(project => <article class="release-row" data-release-row={project.repo}>
+        <span class:list={['release-dot', project.statusClass]}></span>
+        <div class="release-main"><span class="section-index">{project.repo}</span><h3>{project.name} <span data-release-tag>Loading…</span></h3><p data-release-description>Checking GitHub for the latest release…</p></div>
+        <div class="release-side"><time data-release-date>GitHub API</time><a class="text-link" data-release-link href={`https://github.com/${project.repo}/releases`} target="_blank" rel="noreferrer">Open releases ↗</a></div>
+      </article>)}
+    </div>
+    <p class="api-note"><span class="prompt">i</span> Release information is retrieved from GitHub at page load. If no release is published, use “All releases” to see repository activity.</p>
+  </section>
+  <ReleaseLoader />
+</BaseLayout>

@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TerminalCard from '../components/TerminalCard.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import ReleaseLoader from '../components/ReleaseLoader.astro';
+import { projects } from '../data/projects.js';
+import { getCollection } from 'astro:content';
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort((a,b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const featured = projects.filter(p => p.featured);
+const latest = posts[0];
+---
+<BaseLayout title="AVERY — Independent Developer" description="Independent developer building software, systems, and tools. Explore Lyra, vxOS, KyronOS, releases, and development notes.">
+  <section class="hero section-wrap">
+    <div class="hero-copy">
+      <p class="eyebrow"><span class="prompt">›_</span> HEY, I'M AVERY.</p>
+      <h1>Building software.<br />Breaking limits<span class="red">_</span></h1>
+      <p class="hero-description">I'm an independent developer who loves creating systems, tools, and projects that solve real problems. This is my space to share what I'm working on, write about it, and connect with others.</p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="/projects"><span>›</span> Explore projects</a>
+        <a class="button button-secondary" href="https://github.com/MaseDev33" target="_blank" rel="noreferrer"><span class="github-mini">GH</span> View GitHub</a>
+      </div>
+      <div class="hero-footnote"><span class="live-indicator"></span> INDEPENDENT DEVELOPER <span class="muted-slash">/</span> BUILDING IN PUBLIC</div>
+    </div>
+    <TerminalCard />
+  </section>
+  <section class="section-wrap section-block">
+    <div class="section-heading"><div><span class="section-index">[ 01 ]</span><h2>Featured projects</h2></div><a class="text-link" href="/projects">View all projects <span>→</span></a></div>
+    <div class="project-grid">{featured.map(project => <ProjectCard project={project} />)}</div>
+  </section>
+  <section class="section-wrap lower-grid">
+    <div class="section-block blog-preview">
+      <div class="section-heading"><div><span class="section-index">[ 02 ]</span><h2>Latest from the blog</h2></div><a class="text-link" href="/blog">All posts →</a></div>
+      {latest ? <a class="blog-card" href={`/blog/${latest.id}/`} data-reveal>
+        <div class="blog-art"><span>›_</span><small>DEV / NOTES</small></div>
+        <div class="blog-card-copy"><span class="date-label">{latest.data.pubDate.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'})}</span><h3>{latest.data.title}</h3><p>{latest.data.description}</p><div class="tag-list">{latest.data.tags.slice(0,2).map(tag => <span class="tag">{tag}</span>)}</div></div>
+      </a> : <div class="empty-state"><span class="prompt">›_</span><p>No posts published yet.</p><span>Add a Markdown post in <code>src/content/blog/</code>.</span></div>}
+    </div>
+    <div class="section-block releases-preview">
+      <div class="section-heading"><div><span class="section-index">[ 03 ]</span><h2>Latest releases</h2></div><a class="text-link" href="/releases">All releases →</a></div>
+      <div class="release-list">
+        {projects.map((project, i) => <article class="release-row" data-release-row={project.repo} data-reveal>
+          <span class:list={['release-dot', project.statusClass]}></span>
+          <div class="release-main"><h3>{project.name} <span data-release-tag>Loading…</span></h3><p data-release-description>Checking GitHub for the latest release…</p></div>
+          <div class="release-side"><time data-release-date>GitHub API</time><a data-release-link href={`https://github.com/${project.repo}/releases`} target="_blank" rel="noreferrer">Open releases ↗</a></div>
+        </article>)}
+      </div>
+    </div>
+  </section>
+  <section class="cta-strip section-wrap" data-reveal>
+    <div><span class="section-index">[ NEXT ]</span><h2>Have a project in mind?</h2><p>Explore the code, follow development, or reach out through GitHub.</p></div>
+    <a class="button button-primary" href="https://github.com/MaseDev33" target="_blank" rel="noreferrer">Find me on GitHub ↗</a>
+  </section>
+  <ReleaseLoader />
+</BaseLayout>

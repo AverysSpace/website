@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort((a,b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+<BaseLayout title="Blog — AVERY" description="Development notes, technical write-ups, and project updates.">
+  <section class="page-hero section-wrap">
+    <p class="eyebrow"><span class="prompt">›_</span> LOG / BLOG</p>
+    <h1>Notes from the <span class="red">build.</span></h1>
+    <p>Development logs, technical write-ups, and things learned along the way.</p>
+    <div class="page-meta"><span>{String(posts.length).padStart(2,'0')} POSTS</span><span>MARKDOWN POWERED</span></div>
+  </section>
+  <section class="section-wrap section-block post-list">
+    {posts.length ? posts.map(post => <a class="post-row" href={`/blog/${post.id}/`} data-reveal>
+      <time>{post.data.pubDate.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'})}</time>
+      <div><h2>{post.data.title}</h2><p>{post.data.description}</p><div class="tag-list">{post.data.tags.map(tag => <span class="tag">{tag}</span>)}</div></div>
+      <span class="post-arrow">↗</span>
+    </a>) : <div class="empty-state"><span class="prompt">›_</span><p>No posts published yet.</p></div>}
+  </section>
+</BaseLayout>

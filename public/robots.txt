@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://avery.vx538.is-a.dev/sitemap-index.xml

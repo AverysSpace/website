@@ -1,0 +1,39 @@
+<script>
+  const nodes = [...document.querySelectorAll('[data-release-version]')];
+  const uniqueRepos = [...new Set(nodes.map(n => n.getAttribute('data-release-version')).filter(Boolean))];
+  for (const repo of uniqueRepos) {
+    try {
+      const response = await fetch(`https://api.github.com/repos/${repo}/releases/latest`, {
+        headers: { Accept: 'application/vnd.github+json' }
+      });
+      if (!response.ok) throw new Error('No public release');
+      const release = await response.json();
+      nodes.filter(n => n.getAttribute('data-release-version') === repo).forEach(n => {
+        n.textContent = release.tag_name || 'Latest release';
+        n.setAttribute('title', release.name || release.tag_name || 'Latest release');
+      });
+      document.querySelectorAll(`[data-release-row="${repo}"]`).forEach(row => {
+        const version = row.querySelector('[data-release-tag]');
+        const date = row.querySelector('[data-release-date]');
+        const description = row.querySelector('[data-release-description]');
+        const link = row.querySelector('[data-release-link]');
+        if (version) version.textContent = release.tag_name || 'Latest release';
+        if (date) date.textContent = release.published_at ? new Date(release.published_at).toLocaleDateString(undefined, {year:'numeric',month:'short',day:'numeric'}) : 'Date unavailable';
+        if (description) description.textContent = release.body?.split('\n').find(line => line.trim() && !line.startsWith('#'))?.slice(0, 140) || 'View the release notes on GitHub.';
+        if (link) { link.href = release.html_url; link.textContent = 'View release ↗'; }
+      });
+    } catch {
+      nodes.filter(n => n.getAttribute('data-release-version') === repo).forEach(n => n.textContent = 'View releases');
+      document.querySelectorAll(`[data-release-row="${repo}"]`).forEach(row => {
+        const version = row.querySelector('[data-release-tag]');
+        const date = row.querySelector('[data-release-date]');
+        const description = row.querySelector('[data-release-description]');
+        const link = row.querySelector('[data-release-link]');
+        if (version) version.textContent = 'No public release found';
+        if (date) date.textContent = 'GitHub';
+        if (description) description.textContent = 'Check the repository for source code and development updates.';
+        if (link) { link.href = `https://github.com/${repo}/releases`; link.textContent = 'All releases ↗'; }
+      });
+    }
+  }
+</script>

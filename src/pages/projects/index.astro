@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import ReleaseLoader from '../../components/ReleaseLoader.astro';
+import { projects } from '../../data/projects.js';
+---
+<BaseLayout title="Projects — AVERY" description="Software, systems, and experiments by Avery.">
+  <section class="page-hero section-wrap">
+    <p class="eyebrow"><span class="prompt">›_</span> INDEX / PROJECTS</p>
+    <h1>Things I'm <span class="red">building.</span></h1>
+    <p>Software experiments, ongoing projects, and tools made to solve real problems.</p>
+    <div class="page-meta"><span>{String(projects.length).padStart(2,'0')} PROJECTS</span><span>OPEN SOURCE WHERE POSSIBLE</span></div>
+  </section>
+  <section class="section-wrap section-block">
+    <div class="project-grid">{projects.map(project => <ProjectCard project={project} />)}</div>
+  </section>
+  <section class="section-wrap note-panel"><span class="prompt">//</span><p>Projects evolve. Check the linked repositories for the most accurate status, source code, and contribution information.</p></section>
+  <ReleaseLoader />
+</BaseLayout>

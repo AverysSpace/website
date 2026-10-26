@@ -30,6 +30,8 @@ npm run preview
 
 In a production environment, we recommend using Docker to host this. It makes it easier to host in the background and takes up less resources. 
 
+——-
+
 The static site is generated in `dist/`.
 
 ## Configure before publishing

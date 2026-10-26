@@ -1,0 +1,7 @@
+services:
+  avery-website:
+    build: .
+    container_name: avery-website
+    restart: always
+    ports:
+      - "7355:80"

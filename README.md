@@ -28,7 +28,7 @@ npm run preview
 
 ## Production environment
 
-In a production environment, we recommend using Docker to host this. It makes it easier to host in the background and takes up less resources. 
+In a production environment where you host this on a VPS or yourself, we recommend using Docker to host this. It makes it easier to host in the background and takes up less resources. 
 
 ## Generation Path
 
